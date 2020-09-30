@@ -47,3 +47,4 @@ does not have exactly three channels. The `ImageNetDataset` will automatically
 pick up the file next time the dataset is used.
 
 
+To see the code in action, please see [this example code](https://github.com/fhvilshoj/TorchLRP/blob/19ebec4832c977eaef5a28c3291392d8074496e6/examples/explain_vgg.py#L32).
