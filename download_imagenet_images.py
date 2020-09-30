@@ -62,10 +62,11 @@ def get_urls(id_to_synset_dict, limit=-1):
     
     print("Downloading urls from %s" % api_url)
 
-    for synset_id, i in tqdm(id_to_synset_dict.items()):
+    progress_bar = tqdm(total=len(id_to_synset_dict))
+    for synset_id, i in id_to_synset_dict.items():
         url = api_url % synset_id
         content = download(url, timeout=15, retry=5, sleep=0.1)
-        content = content.decode('utf-8') 
+        content = content.decode('ISO-8859-1') 
         content = content.split('\n')[:-1] # last line is blank 
         
         if limit is not None: 
@@ -74,6 +75,8 @@ def get_urls(id_to_synset_dict, limit=-1):
 
         content = [(i, *c.split()) for c in content]
         urls += content
+        progress_bar.set_postfix({"num_urls": len(urls)})
+        progress_bar.update(1)
 
     return urls
 
