@@ -1,14 +1,18 @@
+import os
+import pickle
+import pathlib
 import numpy as np
+from PIL import Image
+from natsort import natsorted
+
 import torch
 from torch.utils.data import Dataset
 
-import os
 import torchvision
 import torchvision.transforms as transforms
-from PIL import Image
-import pickle
 
-from natsort import natsorted
+# Use "[folder of this file]/images" as base path
+_base_path = (pathlib.Path(__file__).parent.absolute() / 'images').as_posix()
 
 def _get_additional_transforms(transform):
     return transforms.Compose([
@@ -17,7 +21,7 @@ def _get_additional_transforms(transform):
     ])
 
 class ImageNetDataset(Dataset):
-    def __init__(self, root_dir='./images', transform=None):
+    def __init__(self, root_dir=_base_path, transform=None):
         self.root_dir   = root_dir
         if self.root_dir[-1] != '/': self.root_dir += '/'
 
@@ -28,10 +32,10 @@ class ImageNetDataset(Dataset):
         bad_files = os.path.join(root_dir, '../bad_images.pkl')
         if os.path.exists(bad_files):
             with open(bad_files, 'rb') as f:
-                bad_files   = set([f.split('/')[-1] for f in pickle.load(f)])
+                bad_images   = set([f.split('/')[-1] for f in pickle.load(f)])
                 self.files  = [f for f in self.files if not f in bad_images]
 
-        self.files          = [f for f in self.files if not 'random' in f and not f in bad_images]
+        self.files          = [f for f in self.files if not 'random' in f]
         self.files          = [(os.path.join(self.root_dir, f), int(f.split("_")[0])) for f in self.files]
 
         self.transform      = _get_additional_transforms(transform)
