@@ -1,0 +1,11 @@
+name: imagenet
+channels:
+    - pytorch
+    - defaults
+    - anaconda
+dependencies:
+    - python=3.7
+    - numpy=1.19
+    - pytorch=1.6
+    - torchvision
+    - tqdm=4.48
